@@ -59,4 +59,4 @@ apt-get update
 install_nginx
 install_ghost
 
-systemctl reload nginx
+systemctl restart nginx
