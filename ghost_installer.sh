@@ -45,7 +45,7 @@ install_ghost()
 	
 	# Prepare env
 	mkdir -p /var/www/$WWW_CODENAME
-	printf "\nTake ownership of /var/www/$WWW_CODENAME and run ghost install."
+	printf "\nTake ownership of /var/www/$WWW_CODENAME and run 'ghost install --port <port>'."
 	printf "\nIMPORTANT: Edit config.json to ensure host is 0.0.0.0!\n\n"
 	
 	# Copy Upstart
