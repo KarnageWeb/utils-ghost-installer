@@ -5,6 +5,16 @@ set_vars()
 	# Main
 	read -p "Enter website codename [html]: " WWW_CODENAME; WWW_CODENAME=${WWW_CODENAME:-html}
 	read -p "Enter domain name [$WWW_CODENAME.com]: " DOMAIN_NAME; DOMAIN_NAME=${DOMAIN_NAME:-$WWW_CODENAME.com}
+	read -p "Enter Ghost port [2367]: " GHOST_PORT; GHOST_PORT=${GHOST_PORT:-2367}
+	read -p "Enter shell username: " SHELL_USERNAME
+	echo "Set up Upstart script?"
+	select choice in "Yes" "No"
+	do
+		case $choice in
+			Yes ) UPSTART='true'; break;;
+			No ) UPSTART='false'; break;;
+		esac
+	done
 	
 	LOG_NAME=$WWW_CODENAME
 }
@@ -45,11 +55,22 @@ install_ghost()
 	
 	# Prepare env
 	mkdir -p /var/www/$WWW_CODENAME
-	printf "\nTake ownership of /var/www/$WWW_CODENAME and run 'ghost install --port <port>'."
-	printf "\nIMPORTANT: Edit config.json to ensure host is 0.0.0.0!\n\n"
+	cd /var/www/$WWW_CODENAME
+	if [ ! -z $SHELL_USERNAME ]; then
+		chown -r $SHELL_USERNAME:$SHELL_USERNAME ./
+		chmod g+w ./
+		chmod g+s ./
+	fi
 	
-	# Copy Upstart
-	cp ghost_upstart.conf /etc/init/ghost.conf
+	ghost install --port $GHOST_PORT
+	
+	if [ ! -z $UPSTART ]; then
+		if [ $UPSTART = 'true' ]; then
+			# Copy Upstart
+			cp ghost_upstart.conf /etc/init/ghost.conf
+			service ghost start
+		fi
+	fi
 }
 
 set_vars
