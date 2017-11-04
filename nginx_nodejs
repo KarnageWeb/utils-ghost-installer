@@ -1,5 +1,5 @@
 server {
-    listen 0.0.0.0:80;
+    listen 0.0.0.0:LISTEN_PORT;
     server_name DOMAIN_NAME;
     access_log /var/log/nginx/LOG_NAME.log;
 
@@ -8,7 +8,7 @@ server {
         proxy_set_header HOST $http_host;
         proxy_set_header X-NginX-Proxy true;
 
-        proxy_pass http://127.0.0.1:2368;
+        proxy_pass http://127.0.0.1:SERVER_PORT;
         proxy_redirect off;
     }
 }
